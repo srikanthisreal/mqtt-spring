@@ -42,7 +42,7 @@ public class CosmosChangeFeedService {
                             mqttClient.publish(mqttTopic, new MqttMessage(message.getBytes()));
                         } catch (Exception e) {
                             e.printStackTrace();
-                        }
+                            }
                     });
                 })
                 .options(new ChangeFeedProcessorOptions())
