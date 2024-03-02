@@ -9,7 +9,7 @@ group = 'com.mqtt'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '21'
+	sourceCompatibility = '17'
 }
 
 repositories {
@@ -22,46 +22,28 @@ ext {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-web-services'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation 'org.apache.kafka:kafka-streams'
-	implementation 'org.springframework.cloud:spring-cloud-stream'
-	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka'
-	implementation 'org.springframework.cloud:spring-cloud-stream-binder-kafka-streams'
-	implementation 'org.springframework.kafka:spring-kafka'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-
-
-	// https://mvnrepository.com/artifact/com.azure/azure-cosmos
-	implementation 'com.azure:azure-cosmos:4.55.1'
-
-
-	// https://mvnrepository.com/artifact/org.eclipse.paho/org.eclipse.paho.client.mqttv3
-	implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5'
-
-	// https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
-	implementation 'javax.annotation:javax.annotation-api:1.3.2'
-
-
+	implementation "org.springframework.boot:spring-boot-starter-security"
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	// Test dependency
+	testImplementation 'org.apache.groovy:groovy-all:4.0.19'
+	// example with adding Spock core and Spock Spring
+	testImplementation 'org.spockframework:spock-core:2.4-M2-groovy-4.0'
+	testImplementation 'org.spockframework:spock-spring:2.4-M2-groovy-4.0'
+
+	// https://mvnrepository.com/artifact/io.rest-assured/rest-assured
+	testImplementation 'io.rest-assured:rest-assured:5.4.0'
+
+	// https://mvnrepository.com/artifact/io.rest-assured/spring-mock-mvc
+	testImplementation 'io.rest-assured:spring-mock-mvc:5.4.0'
+
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'io.projectreactor:reactor-test'
-	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
-	testImplementation 'org.springframework.kafka:spring-kafka-test'
-	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.cloud:spring-cloud-starter-contract-verifier'
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-	}
-}
+
 
 tasks.named('test') {
 	useJUnitPlatform()
@@ -69,4 +51,31 @@ tasks.named('test') {
 
 contracts {
 	baseClassForTests = 'com.mqtt.mqttspring.ContractTestBaseClass'
+	testFramework = "JUNIT5"
+	testMode = 'MockMvc'
+	generatedTestJavaSourcesDir = project.file("${project.buildDir}/generated-test-sources/contractTest/java")
+	generatedTestGroovySourcesDir = project.file("${project.buildDir}/generated-test-sources/contractTest/groovy")
+	generatedTestResourcesDir = project.file("${project.buildDir}/generated-test-resources/contracts")
+	contractsDslDir = project.file("${project.projectDir}/src/test/resources/contracts")
+	basePackageForTests = 'org.springframework.cloud.verifier.tests'
+//	baseClassForTests = 'org.mycompany.tests'
+//	generatedTestSourcesDir = project.file('src/test/generatedContract')
+
+	stubsOutputDir = project.file("${project.buildDir}/stubs")
+//	contractDependency {
+//		contractsDslDir = file('/src/test/resources/contracts')
+//	}
+
 }
+
+
+
+apply plugin: 'groovy'
+apply plugin: 'spring-cloud-contract'
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-contract-dependencies:${verifier_version}"
+	}
+}
+
