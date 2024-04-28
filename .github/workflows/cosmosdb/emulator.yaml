@@ -7,13 +7,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Install Cosmos DB Emulator
-        run: |
-          choco install azure-cosmosdb-emulator --params="/NoExplorer /NoFirewall /AcceptLicenseAgreement"
-          $env:COSMOSDB_EMULATOR_IP_ADDRESS = "localhost"
-          $env:COSMOSDB_KEY = "<your_primary_key_here>" # Default primary key used by the emulator
 
       - name: Start Cosmos DB Emulator
         run: |
           & 'C:\Program Files\Azure Cosmos DB Emulator\CosmosDB.Emulator.exe' start /NoUI
+        shell: powershell
+
+      - name: Check connection
+        run: |
+          curl https://localhost:8081/_explorer/index.html
         shell: powershell
