@@ -11,6 +11,7 @@ jobs:
       - name: Start Cosmos DB Emulator
         run: |
           & 'C:\Program Files\Azure Cosmos DB Emulator\CosmosDB.Emulator.exe' start /NoUI
+          Start-Sleep -Seconds 140
         shell: powershell
 
       - name: Check connection
