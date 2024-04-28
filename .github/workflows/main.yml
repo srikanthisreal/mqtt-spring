@@ -1,0 +1,19 @@
+name: Cosmos DB Emulator Test
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install Cosmos DB Emulator
+        run: |
+          choco install azure-cosmosdb-emulator --params="/NoExplorer /NoFirewall /AcceptLicenseAgreement" --arguments="/l*v c:\azure-cosmosdb-emulator_msi_install.log"
+          $env:COSMOSDB_EMULATOR_IP_ADDRESS = "localhost"
+          $env:COSMOSDB_KEY = "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" # Default primary key used by the emulator
+
+      - name: Start Cosmos DB Emulator
+        run: |
+          & 'C:\Program Files\Azure Cosmos DB Emulator\CosmosDB.Emulator.exe' start /NoUI
+        shell: powershell
