@@ -6,13 +6,16 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Start Cosmos DB Emulator
+      - name: Start Azure Cosmos DB Emulator
         run: |
-          & 'C:\Program Files\Azure Cosmos DB Emulator\CosmosDB.Emulator.exe' start /NoUI
-          Start-Sleep -Seconds 140
-        shell: powershell
+          Set-Location "C:\Program Files\Azure Cosmos DB Emulator"
+          .\Microsoft.Azure.Cosmos.Emulator.exe /Start /NoUI /NoExplorer
+          # Wait for the emulator to fully start
+          Start-Sleep -Seconds 240
+          .\Microsoft.Azure.Cosmos.Emulator.exe /GetStatus
+        shell: pwsh
 
       - name: Check connection
         run: |
