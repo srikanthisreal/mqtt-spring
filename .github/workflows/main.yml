@@ -15,9 +15,6 @@ jobs:
           # Wait for the emulator to fully start
           Start-Sleep -Seconds 240
           .\Microsoft.Azure.Cosmos.Emulator.exe /GetStatus
-        shell: pwsh
-
-      - name: Check connection
-        run: |
+          # Check Connection
           curl https://localhost:8081/_explorer/index.html
-        shell: powershell
+        shell: pwsh
